@@ -231,6 +231,13 @@ RUN \
     # && mv ~/.local/share/jupyter /shareVolume/config/jupyter/share \
     # && ln -s /shareVolume/config/jupyter/share ~/.local/share/jupyter \
     && jupyter notebook --generate-config --allow-root \
+    
+    && echo "c.NotebookApp.token = ''" >> /shareVolume/config/jupyter/jupyter_notebook_config.py \
+    && echo "c.NotebookApp.password=''" >> /shareVolume/config/jupyter/jupyter_notebook_config.py \
+    && echo "c.NotebookApp.password_required=False" >> /shareVolume/config/jupyter/jupyter_notebook_config.py \
+
+    # && echo "c.NotebookApp.password='sha1:d12a2dd64552:86359144939d58019e6e5b37e373a50426ad7b2b' ">> /shareVolume/config/jupyter/jupyter_notebook_config.py
+
     # 查看可用jupyter主题 jt -l
     # 应用主题
     # 设置密码： jupyter notebook password
