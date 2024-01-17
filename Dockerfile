@@ -32,7 +32,7 @@ RUN \
         libqt6pdf6 \
         # vnpy 3.7.0开始需要依赖 libxcb-randr0-dev
         libxcb-randr0-dev \
-        git x11vnc xvfb vim tzdata sudo dmidecode libsqlite3-dev libssl-dev nginx \
+        git x11vnc xvfb vim tzdata sudo dmidecode libsqlite3-dev libssl-dev nginx unzip \
         apt-utils fluxbox dialog iputils-ping wget build-essential supervisor curl \
 
         # chromium-browser chromium-chromedriver \
