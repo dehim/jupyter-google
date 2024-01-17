@@ -34,6 +34,8 @@ RUN \
         libqt6pdf6 \
         # vnpy 3.7.0开始需要依赖 libxcb-randr0-dev
         libxcb-randr0-dev \
+        # nginx 需要
+        libpcre3 libpcre3-dev \
         git x11vnc xvfb vim tzdata sudo dmidecode libsqlite3-dev libssl-dev unzip \
         apt-utils fluxbox dialog iputils-ping wget build-essential supervisor curl \
 
@@ -58,7 +60,23 @@ RUN \
 
     && cd /usr/bin \
     && rm -f python \
-    && ln -s python3.10 python \      
+    && ln -s python3.10 python \   
+
+    
+    && groupadd -g 1000 www \
+    && useradd -g 1000 -m -s /bin/bash www \
+    && echo 'www:www' |chpasswd \
+    && echo 'root:root' |chpasswd \
+    && echo "www ALL=(ALL:ALL) ALL \nwww ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/default \
+    && chmod 440 /etc/sudoers.d/default \
+    # localtime 与 timezone 所在时区要保持一致，否则 tzlocal.utils.ZoneInfoNotFoundError: 'Multiple conflicting time zone configurations found
+    # 原指向：localtime -> /usr/share/zoneinfo/Etc/UTC
+    # 必须要先删除，再重建软连接，否则直接覆盖都无效
+    # && cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && rm -f /etc/localtime \
+    && cd /etc \
+    && ln -s /usr/share/zoneinfo/Asia/Shanghai localtime \
+    && echo "Asia/Shanghai" > /etc/timezone \   
 
     
     && chmod 777 -R /usr/src \
@@ -198,20 +216,6 @@ RUN \
     && ln -s /shareVolume/config/vnc ~/.vnc \
 
 
-    && groupadd -g 1000 www \
-    && useradd -g 1000 -m -s /bin/bash www \
-    && echo 'www:www' |chpasswd \
-    && echo 'root:root' |chpasswd \
-    && echo "www ALL=(ALL:ALL) ALL \nwww ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/default \
-    && chmod 440 /etc/sudoers.d/default \
-    # localtime 与 timezone 所在时区要保持一致，否则 tzlocal.utils.ZoneInfoNotFoundError: 'Multiple conflicting time zone configurations found
-    # 原指向：localtime -> /usr/share/zoneinfo/Etc/UTC
-    # 必须要先删除，再重建软连接，否则直接覆盖都无效
-    # && cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-    && rm -f /etc/localtime \
-    && cd /etc \
-    && ln -s /usr/share/zoneinfo/Asia/Shanghai localtime \
-    && echo "Asia/Shanghai" > /etc/timezone \
     # && dpkg-reconfigure -f noninteractive tzdata \
     # && mv /bin/sh /bin/sh_bak \
     # && ln -s /bin/bash /bin/sh \
