@@ -6,6 +6,7 @@ LABEL maintainer="dehim"
 ENV DEBIAN_FRONTEND='noninteractive' 
 
 RUN \
+    XRAY_VERSION='1.8.7'; \
     if [ "$(uname -m)" = "aarch64" ]; then export ARCH=arm64 && X_ARCH=arm64-v8a && BUILDTYPE=aarch64; fi \
     && if [ "$(uname -m)" = "x86_64" ]; then export ARCH=amd64 && X_ARCH=64 && BUILDTYPE=x86_64; fi \
     && apt-get update \
@@ -31,7 +32,7 @@ RUN \
         libqt6pdf6 \
         # vnpy 3.7.0开始需要依赖 libxcb-randr0-dev
         libxcb-randr0-dev \
-        git x11vnc xvfb vim tzdata sudo dmidecode libsqlite3-dev libssl-dev \
+        git x11vnc xvfb vim tzdata sudo dmidecode libsqlite3-dev libssl-dev nginx \
         apt-utils fluxbox dialog iputils-ping wget build-essential supervisor curl \
 
         # chromium-browser chromium-chromedriver \
@@ -72,7 +73,7 @@ RUN \
     && cd /etc/pki/tls/certs \
     && ln -s /etc/ssl/certs/ca-certificates.crt ./ca-bundle.crt \
     && cd /tmp \
-    && wget https://github.com/XTLS/Xray-core/releases/download/v${VERSION}/Xray-linux-${X_ARCH}.zip \
+    && wget https://github.com/XTLS/Xray-core/releases/download/v${XRAY_VERSION}/Xray-linux-${X_ARCH}.zip \
     && unzip Xray-linux-${X_ARCH}.zip -d /xray \
     && mkdir /etc/xray \
     && mkdir /usr/local/share/xray \
