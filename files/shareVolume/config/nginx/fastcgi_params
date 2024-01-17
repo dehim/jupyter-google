@@ -1,0 +1,13 @@
+fastcgi_cache fastcgi_cache;
+
+fastcgi_cache_use_stale error timeout invalid_header http_500 http_503 updating;
+
+fastcgi_ignore_headers Cache-Control Expires Set-Cookie;
+
+fastcgi_cache_valid 200 301 302 3s;
+fastcgi_cache_valid 404 500 502 503 504 0s;
+fastcgi_cache_valid any 1m;
+
+fastcgi_cache_min_uses 1;     
+
+fastcgi_index  index.php;

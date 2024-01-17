@@ -1,0 +1,27 @@
+proxy_cache proxy_cache;
+proxy_cache_key $uri$is_args$args;
+proxy_cache_valid 200;
+
+#Proxy Settings
+proxy_redirect off;
+proxy_set_header Host $host;
+#proxy_set_header X-Real-IP $remote_addr;
+#proxy_set_header X-Real-IP $clientRealIp;
+set $Real $proxy_add_x_forwarded_for;
+if ( $Real ~ (\d+)\.(\d+)\.(\d+)\.(\d+),(.*) ){
+     set $Real $1.$2.$3.$4;
+}
+proxy_set_header X-Real-IP $Real;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#proxy_ignore_headers Set-Cookie;
+#proxy_hide_header Set-Cookie;
+proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+proxy_max_temp_file_size 0;
+proxy_connect_timeout 90;
+proxy_send_timeout 90;
+proxy_read_timeout 90;
+proxy_buffer_size 4k;
+proxy_buffers 4 32k;
+proxy_busy_buffers_size 64k;
+proxy_temp_file_write_size 64k;
+##End Proxy Settings
