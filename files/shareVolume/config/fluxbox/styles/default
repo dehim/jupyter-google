@@ -1,0 +1,160 @@
+############################################################## BACKGROUND ######
+
+# background: 					flat 
+# background.color: 				#2c001e
+# background.colorTo:				#2c001e
+
+background:             fullscreen
+background.pixmap:      /root/.fluxbox/wallpaper/bg.jpg
+
+############################################################## FONTS ##########
+
+#menu.frame.font:				Microsoft YaHei-10:bold
+#menu.title.font:				Microsoft YaHei-12:bold
+menu.frame.font:				Microsoft YaHei-12
+menu.title.font:				Microsoft YaHei-12
+toolbar.clock.font:				Microsoft YaHei-12
+toolbar.workspace.font:				Microsoft YaHei-12
+toolbar.iconbar.focused.font:			Microsoft YaHei-12
+toolbar.iconbar.unfocused.font:			Microsoft YaHei-12
+window.font:					Microsoft YaHei-12
+
+############################################################## MENU ###########
+
+menu.bevelWidth:				1
+
+menu.itemHeight:				30
+menu.titleHeight:				32
+menu.borderColor:				#525252
+menu.borderWidth:				1
+
+menu.bullet:					Triangle
+menu.bullet.position:				Right
+menu.frame.underlineColor:			#FFFFFF
+
+menu.title:					raised gradient vertical
+menu.title.justify:				center
+menu.title.color:				#F6DF93
+menu.title.colorTo:				#EEB96B
+menu.title.textColor:				#000000
+
+menu.frame:					flat solid	
+menu.frame.justify:				left
+menu.frame.color:				#FFFFFF
+menu.frame.textColor:				#000000
+menu.frame.disableColor:			#aea79f
+
+menu.hilite:					flat solid
+menu.hilite.color:				#303030
+menu.hilite.textColor:				#FFFFFF
+
+############################################################## TOOLBAR ########
+
+toolbar.bevelWidth:				0
+
+toolbar.borderWidth:				1
+toolbar.borderColor:				#aea79f
+
+toolbar.height:					30
+
+toolbar.justify:				center
+
+toolbar:					raised gradient vertical
+toolbar.pixmap:					
+toolbar.color:					#CBAC73
+toolbar.colorTo:				#404040
+
+toolbar.clock:					raised gradient vertical
+toolbar.clock.justify:				center
+toolbar.clock.color:				#F6DF93
+toolbar.clock.colorTo:				#EEB96B
+toolbar.clock.textColor:			#1A0408
+
+toolbar.workspace:				raised gradient vertical
+toolbar.workspace.justify:			Center
+toolbar.workspace.color:			#F6DF93
+toolbar.workspace.colorTo:			#EEB96B
+toolbar.workspace.textColor:			#1A0408
+
+toolbar.button:					raised gradient vertical 
+toolbar.button.color:				#DDDDDD
+toolbar.button.colorTo:				#C0C0C0
+toolbar.button.picColor:			#1A0408
+toolbar.button.pressed:				sunken gradient vertical 
+toolbar.button.pressed.color:			#DDDDDD
+toolbar.button.pressed.colorTo:			#C0C0C0
+toolbar.button.pressed.picColor:		#FFFFFF
+
+toolbar.iconbar.borderWidth:			1
+toolbar.iconbar.borderColor:			#333333
+
+toolbar.iconbar.empty:				raised gradient vertical
+toolbar.iconbar.empty.color:			#F6DF93
+toolbar.iconbar.empty.colorTo:			#EEB96B
+
+toolbar.iconbar.focused.borderWidth:		1
+toolbar.iconbar.focused.borderColor:		#333333
+toolbar.iconbar.focused:			flat solid
+toolbar.iconbar.focused.color:			#F6DF93
+toolbar.iconbar.focused.textColor:		#1A0408
+toolbar.iconbar.focused.justify:		center
+
+toolbar.iconbar.unfocused.borderWidth:		1
+toolbar.iconbar.unfocused.borderColor:		#525252
+toolbar.iconbar.unfocused:			parentrelative
+toolbar.iconbar.unfocused.color:		#
+toolbar.iconbar.unfocused.colorTo:		#
+toolbar.iconbar.unfocused.textColor:		#5A5A5A
+toolbar.iconbar.unfocused.justify:		center
+
+############################################################## WINDOW #########
+
+#window.roundCorners: TopRight TopLeft
+#window.bevelWidth:				4
+#window.shade:					false
+window.borderWidth:				1
+window.borderColor:				#333333
+
+window.justify:					Center
+window.title.height:				32
+
+window.title.focus:				flat solid
+window.title.focus.color:			#F6DF93
+window.title.unfocus:				flat solid
+window.title.unfocus.color:			#DDDDDD
+
+window.label.focus:				parentrelative
+window.label.focus.color:			#
+window.label.focus.colorTo:			#
+window.label.focus.textColor:			#1A0408
+window.label.unfocus:				parentrelative
+window.label.unfocus.color:			#
+window.label.unfocus.colorTo:			#
+window.label.unfocus.textColor:			#5A5A5A
+
+window.button.focus:				parentrelative
+window.button.focus.color:      		#
+window.button.focus.colorTo:      		#
+window.button.focus.picColor:			#1A0408
+window.button.unfocus:				parentrelative
+window.button.unfocus.Color:			#
+window.button.unfocus.ColorTo:			#
+window.button.unfocus.picColor:			#5A5A5A
+window.button.pressed:				parentrelative
+window.button.pressed.color:			#
+window.button.pressed.colorTo:			#
+window.button.pressed.picColor:			#000000
+
+window.handle.focus:				flat
+window.handle.focus.color:			#DDDDDD
+window.handle.unfocus:				flat
+window.handle.unfocus.color:			#C0C0C0
+window.handleWidth:				4
+
+window.grip.focus:				flat
+window.grip.focus.color:			#F6DF93
+window.grip.unfocus:				flat
+window.grip.unfocus.color:			#DDDDDD
+
+###############################################################################
+# EOF
