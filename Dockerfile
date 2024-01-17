@@ -6,6 +6,8 @@ LABEL maintainer="dehim"
 ENV DEBIAN_FRONTEND='noninteractive' 
 
 RUN \
+    NGINX_VERSION='1.24.0'; \
+    NGX_CACHE_PURGE_VERSION='2.3'; \
     XRAY_VERSION='1.8.7'; \
     if [ "$(uname -m)" = "aarch64" ]; then export ARCH=arm64 && X_ARCH=arm64-v8a && BUILDTYPE=aarch64; fi \
     && if [ "$(uname -m)" = "x86_64" ]; then export ARCH=amd64 && X_ARCH=64 && BUILDTYPE=x86_64; fi \
@@ -32,7 +34,7 @@ RUN \
         libqt6pdf6 \
         # vnpy 3.7.0开始需要依赖 libxcb-randr0-dev
         libxcb-randr0-dev \
-        git x11vnc xvfb vim tzdata sudo dmidecode libsqlite3-dev libssl-dev nginx unzip \
+        git x11vnc xvfb vim tzdata sudo dmidecode libsqlite3-dev libssl-dev unzip \
         apt-utils fluxbox dialog iputils-ping wget build-essential supervisor curl \
 
         # chromium-browser chromium-chromedriver \
@@ -60,6 +62,111 @@ RUN \
 
     
     && chmod 777 -R /usr/src \
+
+
+    # install nginx begin(直接apt install安装的nginx守护进程总有问题)
+# download ngx_cache_purge module
+    && cd /usr/src \
+    && wget http://labs.frickle.com/files/ngx_cache_purge-${NGX_CACHE_PURGE_VERSION}.tar.gz \
+    && tar -zxvf ngx_cache_purge-${NGX_CACHE_PURGE_VERSION}.tar.gz >/dev/null 2>&1 \
+    && git clone https://github.com/openresty/echo-nginx-module.git /usr/src/echo-nginx-module \
+    # && NGINX_GPG=B0F4253373F8F6F510D42178520A9993A1C052F8 \
+    && CONFIG="\
+       --prefix=/etc/nginx \
+       --sbin-path=/usr/sbin/nginx \
+       --modules-path=/usr/lib/nginx/modules \
+       --conf-path=/etc/nginx/nginx.conf \
+       --error-log-path=/var/log/nginx/error.log \
+       --http-log-path=/var/log/nginx/access.log \
+       --pid-path=/var/cache/nginx/nginx.pid \
+       --lock-path=/var/cache/nginx/nginx.lock \
+       --http-client-body-temp-path=/var/cache/nginx/client_temp \
+       --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+       --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+       --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+       --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
+       --user=www \
+       --group=www \
+       --with-http_ssl_module \
+       --with-http_realip_module \
+       --with-http_addition_module \
+       --with-http_sub_module \
+       --with-http_dav_module \
+       --with-http_flv_module \
+       --with-http_mp4_module \
+       --with-http_gunzip_module \
+       --with-http_gzip_static_module \
+       --with-http_random_index_module \
+       --with-http_secure_link_module \
+       --with-http_stub_status_module \
+       --with-http_auth_request_module \
+       --with-http_xslt_module=dynamic \
+       --with-http_image_filter_module=dynamic \
+       --with-http_geoip_module=dynamic \
+       --with-threads \
+       --with-stream \
+       --with-stream_ssl_module \
+       --with-stream_ssl_preread_module \
+       --with-stream_realip_module \
+       --with-stream_geoip_module=dynamic \
+       --with-http_slice_module \
+       --with-mail \
+       --with-mail_ssl_module \
+       --with-compat \
+       --with-file-aio \
+       --with-http_v2_module \
+       --add-module=/usr/src/ngx_cache_purge-${NGX_CACHE_PURGE_VERSION} \
+       --add-module=/usr/src/echo-nginx-module \
+    	" \
+    && mkdir -p /data \
+    && cd /usr/src \
+    && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz \
+    # && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz.asc \
+    # && gpg --keyserver pool.sks-keyservers.net --recv-keys "$NGINX_GPG" \
+	# && gpg --batch --verify nginx-${NGINX_VERSION}.tar.gz.asc nginx-${NGINX_VERSION}.tar.gz \
+    && tar xzf nginx-${NGINX_VERSION}.tar.gz >/dev/null 2>&1 \
+    && cd /usr/src/nginx-${NGINX_VERSION} \
+    && ./configure $CONFIG --with-debug \
+	&& make -j$(getconf _NPROCESSORS_ONLN) \
+	&& mv objs/nginx objs/nginx-debug \
+	&& mv objs/ngx_http_xslt_filter_module.so objs/ngx_http_xslt_filter_module-debug.so \
+	&& mv objs/ngx_http_image_filter_module.so objs/ngx_http_image_filter_module-debug.so \
+	&& mv objs/ngx_http_geoip_module.so objs/ngx_http_geoip_module-debug.so \
+	&& mv objs/ngx_stream_geoip_module.so objs/ngx_stream_geoip_module-debug.so \
+	&& ./configure $CONFIG \
+	# && make -j$(getconf _NPROCESSORS_ONLN) \
+	&& make >/dev/null 2>&1 \
+	&& make install \
+    && rm -rf /etc/nginx/html/ \
+	&& mkdir -p /etc/nginx/conf.d/ \
+	&& mkdir -p /usr/share/nginx/html/ \
+	&& install -m644 html/index.html /usr/share/nginx/html/ \
+	&& install -m644 html/50x.html /usr/share/nginx/html/ \
+	&& install -m755 objs/nginx-debug /usr/sbin/nginx-debug \
+	&& install -m755 objs/ngx_http_xslt_filter_module-debug.so /usr/lib/nginx/modules/ngx_http_xslt_filter_module-debug.so \
+	&& install -m755 objs/ngx_http_image_filter_module-debug.so /usr/lib/nginx/modules/ngx_http_image_filter_module-debug.so \
+	&& install -m755 objs/ngx_http_geoip_module-debug.so /usr/lib/nginx/modules/ngx_http_geoip_module-debug.so \
+	&& install -m755 objs/ngx_stream_geoip_module-debug.so /usr/lib/nginx/modules/ngx_stream_geoip_module-debug.so \
+	&& ln -s ../../usr/lib/nginx/modules /etc/nginx/modules \
+	&& ln -s /usr/share/nginx/html /etc/nginx/html \
+	&& strip /usr/sbin/nginx* \
+	&& strip /usr/lib/nginx/modules/*.so \
+    && cd /usr/src \
+	&& mv /usr/bin/envsubst /tmp/ \
+	\
+	&& runDeps="$( \
+	   scanelf --needed --nobanner --format '%n#p' /usr/sbin/nginx /usr/lib/nginx/modules/*.so /tmp/envsubst \
+		   | tr ',' '\n' \
+   	   | sort -u \
+		   | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+	)" \
+	&& mv /tmp/envsubst /usr/bin/ \
+	\
+	# 没必要：forward request and error logs to docker log collector
+	# && ln -sf /dev/stdout /var/log/nginx/access.log \
+	# && ln -sf /dev/stderr /var/log/nginx/error.log \
+    && rm -rf /usr/src/* \
+# install nginx end
 
 
 
