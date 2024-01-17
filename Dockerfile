@@ -446,6 +446,6 @@ COPY files /
 
 VOLUME ["/shareVolume"]
 
-# EXPOSE 80 8888
+EXPOSE 80
 
 CMD ["supervisord", "-n", "-c",  "/etc/supervisord.conf"]
