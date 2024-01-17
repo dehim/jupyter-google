@@ -35,7 +35,7 @@ RUN \
         # vnpy 3.7.0开始需要依赖 libxcb-randr0-dev
         libxcb-randr0-dev \
         # nginx 需要
-        libpcre3 libpcre3-dev libxml2-dev libxslt-dev libgd-dev libgeoip-dev \
+        libpcre3 libpcre3-dev libxml2-dev libxslt-dev libgd-dev libgeoip-dev gettext-base \
         git x11vnc xvfb vim tzdata sudo dmidecode libsqlite3-dev libssl-dev unzip \
         apt-utils fluxbox dialog iputils-ping wget build-essential supervisor curl \
 
