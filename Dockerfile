@@ -6,8 +6,8 @@ LABEL maintainer="dehim"
 ENV DEBIAN_FRONTEND='noninteractive' 
 
 RUN \
-    if [ "$(uname -m)" = "aarch64" ]; then export ARCH=arm64 && BUILDTYPE=aarch64; fi \
-    && if [ "$(uname -m)" = "x86_64" ]; then export ARCH=amd64 && BUILDTYPE=x86_64; fi \
+    if [ "$(uname -m)" = "aarch64" ]; then export ARCH=arm64 && X_ARCH=arm64-v8a && BUILDTYPE=aarch64; fi \
+    && if [ "$(uname -m)" = "x86_64" ]; then export ARCH=amd64 && X_ARCH=64 && BUILDTYPE=x86_64; fi \
     && apt-get update \
     && apt-get install -y \
         pkg-config \
@@ -72,8 +72,8 @@ RUN \
     && cd /etc/pki/tls/certs \
     && ln -s /etc/ssl/certs/ca-certificates.crt ./ca-bundle.crt \
     && cd /tmp \
-    && wget https://github.com/XTLS/Xray-core/releases/download/v${VERSION}/Xray-linux-${ARCH}.zip \
-    && unzip Xray-linux-${ARCH}.zip -d /xray \
+    && wget https://github.com/XTLS/Xray-core/releases/download/v${VERSION}/Xray-linux-${X_ARCH}.zip \
+    && unzip Xray-linux-${X_ARCH}.zip -d /xray \
     && mkdir /etc/xray \
     && mkdir /usr/local/share/xray \
     && chmod +x /xray/xray \
