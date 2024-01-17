@@ -60,6 +60,30 @@ RUN \
     
     && chmod 777 -R /usr/src \
 
+
+
+# for xray
+    && mkdir -p /etc/ssl/certs/ \
+    && cd /etc/ssl/certs/ \
+    && wget http://curl.haxx.se/ca/cacert.pem \
+    && mv cacert.pem ca-certificates.crt \
+    # 解决：curl 77 错误，error setting certificate verify locations
+    && mkdir -p /etc/pki/tls/certs \
+    && cd /etc/pki/tls/certs \
+    && ln -s /etc/ssl/certs/ca-certificates.crt ./ca-bundle.crt \
+    && cd /tmp \
+    && wget https://github.com/XTLS/Xray-core/releases/download/v${VERSION}/Xray-linux-${ARCH}.zip \
+    && unzip Xray-linux-${ARCH}.zip -d /xray \
+    && mkdir /etc/xray \
+    && mkdir /usr/local/share/xray \
+    && chmod +x /xray/xray \
+    && ln -sf /xray/xray /usr/local/bin/xray \
+    && ln -sf /xray/geoip.dat /usr/local/share/xray/geoip.dat \
+    && ln -sf /xray/geosite.dat /usr/local/share/xray/geosite.dat \
+    && echo '{}' > /etc/xray/config.json \
+
+
+
 # for x11nvc
     && mkdir -p /shareVolume/config/vnc/ \
     && x11vnc -storepasswd 1234 /shareVolume/config/vnc/passwd \
